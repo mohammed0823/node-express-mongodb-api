@@ -3,20 +3,39 @@ const swaggerUi = require('swagger-ui-express');
 
 const options = {
   definition: {
-    openapi: "3.0.0",
+    openapi: '3.0.0',
     info: {
-      title: "Order System API",
-      version: "1.0.0",
-      description: "A simple Express API for managing orders",
+      title: 'Order System API',
+      version: '1.0.0',
+      description: 'A RESTful API for an order system',
     },
     servers: [
       {
-        url: "http://localhost:3000",
+        url: 'http://localhost:3000',
       },
     ],
+    components: {
+      schemas: {
+        Item: {
+          type: 'object',
+          properties: {
+            _id: {
+              type: 'string',
+            },
+            name: {
+              type: 'string',
+            },
+            description: {
+              type: 'string',
+            },
+          },
+        },
+      },
+    },    
   },
-  apis: ["./routes/*.js"],
+  apis: ['./routes/items.js'], // path to your route files (corrected)
 };
 
 const specs = swaggerJsdoc(options);
+
 module.exports = { swaggerUi, specs };
