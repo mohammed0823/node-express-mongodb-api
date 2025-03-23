@@ -4,18 +4,35 @@ const Item = require('../models/item');
 
 /**
  * @swagger
- * /items:
+ * components:
+ *   schemas:
+ *     Item:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *           description: The name of the item
+ *         description:
+ *           type: string
+ *           description: Description of the item
+ */
+
+/**
+ * @swagger
+ * /api/items:
  *   post:
  *     summary: Create a new item
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Item'
  *     responses:
  *       201:
  *         description: The item was created
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Item'
  */
-router.post('/', async (req, res) => {
+router.post('/items', async (req, res) => {
   try {
     setTimeout(async () => {
       const newItem = await Item.create(req.body);
@@ -28,7 +45,7 @@ router.post('/', async (req, res) => {
 
 /**
  * @swagger
- * /items:
+ * /api/items:
  *   get:
  *     summary: Get all items
  *     responses:
@@ -41,7 +58,7 @@ router.post('/', async (req, res) => {
  *               items:
  *                 $ref: '#/components/schemas/Item'
  */
-router.get('/', async (req, res) => {
+router.get('/items', async (req, res) => {
   try {
     const items = await Item.find();
     res.json(items);
@@ -52,7 +69,7 @@ router.get('/', async (req, res) => {
 
 /**
  * @swagger
- * /items/{id}:
+ * /api/items/{id}:
  *   get:
  *     summary: Get an item by ID
  *     parameters:
@@ -65,14 +82,11 @@ router.get('/', async (req, res) => {
  *     responses:
  *       200:
  *         description: The item was found
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Item'
  */
-router.get('/:id', async (req, res) => {
+router.get('/items/:id', async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
+    if (!item) return res.status(404).json({ message: "Item not found" });
     res.json(item);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -81,7 +95,7 @@ router.get('/:id', async (req, res) => {
 
 /**
  * @swagger
- * /items/{id}:
+ * /api/items/{id}:
  *   patch:
  *     summary: Update an item
  *     parameters:
@@ -91,17 +105,20 @@ router.get('/:id', async (req, res) => {
  *         description: The item ID
  *         schema:
  *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Item'
  *     responses:
  *       200:
  *         description: The item was updated
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Item'
  */
-router.patch('/:id', async (req, res) => {
+router.patch('/items/:id', async (req, res) => {
   try {
     const updatedItem = await Item.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updatedItem) return res.status(404).json({ message: "Item not found" });
     res.json(updatedItem);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -110,7 +127,7 @@ router.patch('/:id', async (req, res) => {
 
 /**
  * @swagger
- * /items/{id}:
+ * /api/items/{id}:
  *   delete:
  *     summary: Delete an item
  *     parameters:
@@ -124,9 +141,10 @@ router.patch('/:id', async (req, res) => {
  *       200:
  *         description: The item was deleted
  */
-router.delete('/:id', async (req, res) => {
+router.delete('/items/:id', async (req, res) => {
   try {
-    await Item.findByIdAndDelete(req.params.id);
+    const item = await Item.findByIdAndDelete(req.params.id);
+    if (!item) return res.status(404).json({ message: "Item not found" });
     res.json({ message: 'Item deleted' });
   } catch (err) {
     res.status(400).json({ message: err.message });
