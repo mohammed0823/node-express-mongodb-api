@@ -33,7 +33,7 @@ const options = {
       },
     },    
   },
-  apis: ['./routes/items.js'], // path to your route files (corrected)
+  apis: ['./routes/items.js'], // path to the route files (corrected)
 };
 
 const specs = swaggerJsdoc(options);
