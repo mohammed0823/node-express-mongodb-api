@@ -5,16 +5,13 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
 
 const app = express();
-const PORT = process.env.PORT || 5500;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(bodyParser.json());
 
 // MongoDB Connection
-mongoose.connect('mongodb://host.docker.internal:27017/mydatabase', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-});
+mongoose.connect('mongodb://host.docker.internal:27017/mydatabase');
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
@@ -32,7 +29,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: `http://localhost:${PORT}`,
+        url: `http://localhost:4000`,
       },
     ],
     components: {
