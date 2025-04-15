@@ -101,7 +101,3 @@ You can import the Postman collection from this project and run the tests for ea
 ## API Documentation Access
 
 For detailed API documentation, including request parameters, response formats, and examples, visit the Swagger UI.
-
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
